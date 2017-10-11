@@ -22,7 +22,7 @@ architecture synth of PC is
 
 begin
 
-  addr <= X"0000" & s_addr;
+  addr <= X"0000" & (s_addr and (X"111" & "1100"));
 
 pro_save : process(clk, reset_n)
 begin
