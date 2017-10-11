@@ -12,7 +12,7 @@ end IR;
 
 architecture synth of IR is
 
-  signal s_D : in std_logic_vector(31 downto 0);
+  signal s_D : std_logic_vector(31 downto 0);
 
 begin
 
