@@ -17,5 +17,22 @@ entity PC is
 end PC;
 
 architecture synth of PC is
+
+  signal s_addr : std_logic_vector(15 downto 0);
+
 begin
+
+  addr <= X"0000" & s_addr;
+
+pro_save : process(clk, reset_n)
+begin
+  if (reset_n = '1') then
+    s_addr <= X"0000";
+  else
+    if (rising_edge(clk) and en = '1') then
+      s_addr <= std_logic_vector(unsigned(s_addr)+4);
+    end if;
+  end if;
+end process;
+
 end synth;
