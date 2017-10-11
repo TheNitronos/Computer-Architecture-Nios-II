@@ -10,5 +10,18 @@ entity extend is
 end extend;
 
 architecture synth of extend is
+
+  signal s_extended_inm : std_logic_vector(31 downto 0);
+
 begin
+
+  pro_ext : process(inm16, signed)
+  begin
+    if (signed = '1') then
+      inm32 <= "1000" & X"000" & inm16;
+    else
+      inm32 <= X"0000" & inm16;
+    end if;
+  end process;
+
 end synth;
