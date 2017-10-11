@@ -64,11 +64,27 @@ begin
                        end if;
         WHEN I_OP => op_alu <= op;
                      rf_wren <= '1';
-                     if (op = "0111001" or op = "011010") then imm_signed <= '1'
+                     if (op = "011001" or op = "011010") then imm_signed <= '1';
                      else imm_signed <= '0';
                      end if;
                      s_cur_state <= FETCH1;
-        WHEN R_OP => 
+        WHEN R_OP => rf_wren <= '1';
+                     sel_b <= '1';
+                     sel_rC <= '1';
+                     op_alu <= opx;
+                     s_cur_state <= FETCH1;
+        WHEN LOAD1 => sel_addr <= '1';
+                    sel_b <= '0';
+                    read <= '1';
+                    op_alu <=
+                    imm_signed <=
+                    s_cur_state <= LOAD2;
+        WHEN LOAD2 => rf_wren <= '1';
+                     sel_mem <= '1';
+                     sel_rC <= '0';
+                     s_cur_state <= FETCH1;
+
+
       end CASE;
     end if;
   end process;
