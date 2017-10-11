@@ -24,7 +24,6 @@ architecture synth of RAM is
 
 begin
 
-
   pro_read_en : process(clk) is
   begin
     if(rising_edge(clk)) then
