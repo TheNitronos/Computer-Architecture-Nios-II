@@ -11,16 +11,19 @@ end extend;
 
 architecture synth of extend is
 
-  signal s_extended_inm : std_logic_vector(31 downto 0);
+  signal s_extended_imm : std_logic_vector(31 downto 0);
+  signal s_imm16 : std_logic_vector(15 downto 0);
 
 begin
 
-  pro_ext : process(inm16, signed)
+  s_imm16 <= imm16;
+
+  pro_ext : process(s_imm16, signed)
   begin
-    if (signed = '1') then
-      inm32 <= "1000" & X"000" & inm16;
+    if (signed = '1' and s_imm16(0) = '1') then
+      imm32 <= "1000" & X"000" & (s_imm16 and ("0111" & X"111"));
     else
-      inm32 <= X"0000" & inm16;
+      imm32 <= X"0000" & s_imm16;
     end if;
   end process;
 
