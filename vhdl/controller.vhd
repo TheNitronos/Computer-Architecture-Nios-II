@@ -37,5 +37,40 @@ entity controller is
 end controller;
 
 architecture synth of controller is
+
+  TYPE StateType IS (FETCH1, FETCH2, DECODE, R_OP, STORE, BREAK, LOAD1, LOAD2, I_OP);
+  SIGNAl s_cur_state : StateType;
+
 begin
+
+  pro_fsm : process(clk)
+  begin
+    if (reset_n = '1')
+      then s_cur_state <= FETCH1;
+    end if;
+
+    if (rising_edge(clk)) then
+      CASE (s_cur_state) IS
+        WHEN FETCH1 => read <= '1';
+                       s_cur_state <= FETCH2;
+        WHEN FETCH2 => ir_en <= '1';
+                       pc_en <= '1';
+                       s_cur_state <= DECODE;
+        WHEN DECODE => if (op = "111010" and opx = "110100") then s_cur_state <= BREAK;
+                         elsif (op = "111010") then s_cur_state <= R_OP;
+                         elsif (op = "010001") then s_cur_state <= LOAD1;
+                         elsif (op = "001111") then s_cur_state <= STORE;
+                         else s_cur_state <= I_OP;
+                       end if;
+        WHEN I_OP => op_alu <= op;
+                     rf_wren <= '1';
+                     if (op = "0111001" or op = "011010") then imm_signed <= '1'
+                     else imm_signed <= '0';
+                     end if;
+                     s_cur_state <= FETCH1;
+        WHEN R_OP => 
+      end CASE;
+    end if;
+  end process;
+
 end synth;
