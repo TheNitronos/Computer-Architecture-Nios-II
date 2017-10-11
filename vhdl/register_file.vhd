@@ -21,6 +21,7 @@ architecture synth of register_file is
     signal reg: reg_type := (others => (others => '0'));
 
 begin
+  
   a <= reg(to_integer(unsigned(aa)));
   b <= reg(to_integer(unsigned(ab)));
 
