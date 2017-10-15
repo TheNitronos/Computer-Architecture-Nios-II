@@ -43,7 +43,16 @@ architecture synth of controller is
 
 begin
 
-  pro_fsm : process(clk)
+  pro_op : process(op, opx) is
+  begin
+    if(op = X"3A") then op_alu <= opx;
+    elsif op = X"17" then op_alu <= "000000";
+    elsif op = X"15" then op_alu <= "000000";
+    else op_alu <= op;
+    end if;
+  end process pro_op;
+
+  pro_fsm : process(clk) is
   begin
     if (reset_n = '0')
       then s_cur_state <= FETCH1;
@@ -75,8 +84,7 @@ begin
                          elsif (op = "001111") then s_cur_state <= STORE;
                          else s_cur_state <= I_OP;
                        end if;
-        WHEN I_OP => op_alu <= op;
-                     rf_wren <= '1';
+        WHEN I_OP => rf_wren <= '1';
                      if (op = "011001" or op = "011010") then imm_signed <= '1';
                      else imm_signed <= '0';
                      end if;
@@ -84,12 +92,10 @@ begin
         WHEN R_OP => rf_wren <= '1';
                      sel_b <= '1';
                      sel_rC <= '1';
-                     op_alu <= opx;
                      s_cur_state <= FETCH1;
         WHEN LOAD1 => sel_addr <= '1';
                     sel_b <= '0';
                     read <= '1';
-                    op_alu <= "000000";
                     imm_signed <= '1';
                     s_cur_state <= LOAD2;
         WHEN LOAD2 => rf_wren <= '1';
@@ -99,7 +105,6 @@ begin
         WHEN STORE => sel_addr <= '1';
                     sel_b <= '0';
                     write <= '1';
-                    op_alu <= "000000";
                     imm_signed <= '1';
                     s_cur_state <= FETCH1;
         WHEN BREAK => s_cur_state <= BREAK;
