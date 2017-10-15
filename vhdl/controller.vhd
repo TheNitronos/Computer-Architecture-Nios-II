@@ -51,8 +51,21 @@ begin
 
     if (rising_edge(clk)) then
       CASE (s_cur_state) IS
-        WHEN FETCH1 => read <= '1';
-                       s_cur_state <= FETCH2;
+        WHEN FETCH1 => ir_en <= '0';
+                        pc_add_imm <= '0';
+                        pc_en <= '0';
+                        pc_sel_a <= '0';
+                        pc_sel_imm <= '0';
+                        rf_wren <= '0';
+                        sel_addr <= '0';
+                        sel_b <= '0';
+                        sel_mem <= '0';
+                        sel_pc <= '0';
+                        sel_ra <= '0';
+                        sel_rC <= '0';
+                        write <= '0';
+                        read <= '1';
+                        s_cur_state <= FETCH2;
         WHEN FETCH2 => ir_en <= '1';
                        pc_en <= '1';
                        s_cur_state <= DECODE;
@@ -76,15 +89,20 @@ begin
         WHEN LOAD1 => sel_addr <= '1';
                     sel_b <= '0';
                     read <= '1';
-                    op_alu <=
-                    imm_signed <=
+                    op_alu <= "000000";
+                    imm_signed <= '1';
                     s_cur_state <= LOAD2;
         WHEN LOAD2 => rf_wren <= '1';
                      sel_mem <= '1';
                      sel_rC <= '0';
                      s_cur_state <= FETCH1;
-
-
+        WHEN STORE => sel_addr <= '1';
+                    sel_b <= '0';
+                    write <= '1';
+                    op_alu <= "000000";
+                    imm_signed <= '1';
+                    s_cur_state <= FETCH1;
+        WHEN BREAK => s_cur_state <= BREAK;
       end CASE;
     end if;
   end process;
