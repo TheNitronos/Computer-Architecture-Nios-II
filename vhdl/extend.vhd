@@ -21,7 +21,7 @@ begin
   pro_ext : process(s_imm16, signed)
   begin
     if (signed = '1' and s_imm16(0) = '1') then
-      imm32 <= "1000" & X"000" & (s_imm16 and ("0111" & X"111"));
+      imm32 <= X"1111" & s_imm16;
     else
       imm32 <= X"0000" & s_imm16;
     end if;

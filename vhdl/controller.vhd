@@ -45,7 +45,7 @@ begin
 
   pro_fsm : process(clk)
   begin
-    if (reset_n = '1')
+    if (reset_n = '0')
       then s_cur_state <= FETCH1;
     end if;
 
