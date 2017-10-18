@@ -38,7 +38,7 @@ end controller;
 
 architecture synth of controller is
 
-  TYPE StateType IS (FETCH1, FETCH2, DECODE, R_OP, STORE, BREAK, LOAD1, LOAD2, I_OP, BRANCH, CALL, JMP, U_I_OP);
+  TYPE StateType IS (FETCH1, FETCH2, DECODE, R_OP, STORE, BREAK, LOAD1, LOAD2, I_OP, BRANCH, CALL, JMP, U_I_OP, SHIFT);
   SIGNAl s_cur_state, s_next_state: StateType;
 
 begin
@@ -50,7 +50,7 @@ begin
                             elsif opx = "110001" then op_alu <= "000000";
                             elsif opx = "111001" then op_alu <= "001000";
                             elsif opx = "001000" then op_alu <= "011001";
-                            elsif opx = "001010" then op_alu <= "011010";
+                            elsif opx = "010000" then op_alu <= "011010";
                             elsif opx = "000110" then op_alu <= "100000";
                             elsif opx = "001110" then op_alu <= "100001";
                             elsif opx = "010110" then op_alu <= "100010";
@@ -58,6 +58,9 @@ begin
                             elsif opx = "010011" then op_alu <= "110010";
                             elsif opx = "011011" then op_alu <= "110011";
                             elsif opx = "111011" then op_alu <= "110111";
+                            elsif opx = "010010" then op_alu <= "110010";
+                            elsif opx = "011010" then op_alu <= "110011";
+                            elsif opx = "111010" then op_alu <= "110111";
                             end if;
                             
     elsif op = "010111" then op_alu <= "000000";
@@ -72,6 +75,7 @@ begin
     elsif op = "001100" then op_alu <= "100001";
     elsif op = "010100" then op_alu <= "100010";
     elsif op = "011100" then op_alu <= "100011";
+    elsif op = "000110" then op_alu <= "011100";
     else op_alu <= op;
     end if;
   end process pro_op;
@@ -116,6 +120,9 @@ begin
                         if (op = "111010" and opx = "110100") then s_next_state <= BREAK;
                         elsif(op = "111010" and opx = "001101") then s_next_state <= JMP;
                         elsif(op = "111010" and opx = "000101") then s_next_state <= JMP;
+                        elsif(op = "111010" and opx = "010010") then s_next_state <= SHIFT;
+                        elsif(op = "111010" and opx = "011010") then s_next_state <= SHIFT;
+                        elsif(op = "111010" and opx = "111010") then s_next_state <= SHIFT; 
                          elsif (op = "111010") then s_next_state <= R_OP;
                          elsif (op = "010111") then s_next_state <= LOAD1;
                          elsif (op = "010101") then s_next_state <= STORE;
@@ -132,6 +139,10 @@ begin
                      s_next_state <= FETCH1;
         WHEN R_OP => rf_wren <= '1';
                      sel_b <= '1';
+                     sel_rC <= '1';
+                     s_next_state <= FETCH1;
+        WHEN SHIFT => rf_wren <= '1';
+                     sel_b <= '0';
                      sel_rC <= '1';
                      s_next_state <= FETCH1;
         WHEN LOAD1 => sel_addr <= '1';
