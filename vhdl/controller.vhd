@@ -59,6 +59,7 @@ begin
                             elsif opx = "011011" then op_alu <= "110011";
                             elsif opx = "111011" then op_alu <= "110111";
                             end if;
+                            
     elsif op = "010111" then op_alu <= "000000";
     elsif op = "010101" then op_alu <= "000000";
     elsif op = "001110" then op_alu <= "011001";
