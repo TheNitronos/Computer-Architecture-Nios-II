@@ -43,8 +43,10 @@ begin
 
   pro_write: process (clk) is
   begin
-  	if(cs = '1' and rising_edge(clk) and write = '1') then
-  			words(to_integer(unsigned(address))) <= wrdata;
-  	end if;
+    if (rising_edge(clk)) then
+      if(cs = '1' and write = '1') then
+      		words(to_integer(unsigned(address))) <= wrdata;
+      end if;
+    end if;
   end process;
 end synth;
