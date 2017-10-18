@@ -22,15 +22,19 @@ architecture synth of PC is
 
 begin
 
-  addr <= X"0000" & (s_addr and (X"111" & "1100"));
+  addr <= "0000000000000000" & (s_addr and ("1111111111111100"));
 
 pro_save : process(clk, reset_n)
 begin
   if (reset_n = '1') then
-    s_addr <= X"0000";
+    s_addr <= "0000000000000000";
   else
     if (rising_edge(clk) and en = '1') then
-      s_addr <= std_logic_vector(unsigned(s_addr)+4);
+      if(add_imm = '1') then s_addr <= std_logic_vector(unsigned(s_addr) + unsigned(imm));
+      elsif(sel_imm = '1') then s_addr <= std_logic_vector(unsigned(s_addr) + shift_left(unsigned(imm), 2));
+      elsif(sel_a = '1') then s_addr <= a;
+      else s_addr <= std_logic_vector(unsigned(s_addr) + 4);
+      end if;
     end if;
   end if;
 end process;
