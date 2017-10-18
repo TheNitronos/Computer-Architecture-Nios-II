@@ -38,7 +38,7 @@ end controller;
 
 architecture synth of controller is
 
-  TYPE StateType IS (FETCH1, FETCH2, DECODE, R_OP, STORE, BREAK, LOAD1, LOAD2, I_OP, BRANCH, CALL, JMP);
+  TYPE StateType IS (FETCH1, FETCH2, DECODE, R_OP, STORE, BREAK, LOAD1, LOAD2, I_OP, BRANCH, CALL, JMP, U_I_OP);
   SIGNAl s_cur_state, s_next_state: StateType;
 
 begin
@@ -68,6 +68,10 @@ begin
     elsif op = "100110" then op_alu <= "011100";
     elsif op = "101110" then op_alu <= "011101";
     elsif op = "110110" then op_alu <= "011110";
+    elsif op = "000100" then op_alu <= "000000";
+    elsif op = "001100" then op_alu <= "100001";
+    elsif op = "010100" then op_alu <= "100010";
+    elsif op = "011100" then op_alu <= "100011";
     else op_alu <= op;
     end if;
   end process pro_op;
@@ -117,10 +121,14 @@ begin
                          elsif (op = "010101") then s_next_state <= STORE;
                          elsif (op = "000110" or op = "001110" or op = "010110" or op = "011110" or op = "100110" or op = "101110" or op = "110110") then s_next_state <= BRANCH;
                          elsif (op = "000000") then s_next_state <= CALL;
+                         elsif (op = "001100" or op = "010100" or op = "011100") then s_next_state <= U_I_OP;
                          else s_next_state <= I_OP;
                        end if;
         WHEN I_OP => rf_wren <= '1';
                      imm_signed <= '1';
+                     s_next_state <= FETCH1;
+        WHEN U_I_OP => rf_wren <= '1';
+                     imm_signed <= '0';
                      s_next_state <= FETCH1;
         WHEN R_OP => rf_wren <= '1';
                      sel_b <= '1';
