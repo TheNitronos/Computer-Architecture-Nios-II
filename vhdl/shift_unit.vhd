@@ -13,5 +13,7 @@ end shift_unit;
 
 architecture synth of shift_unit is
 begin
+
 	r <= X"00000000";
+  
 end synth;

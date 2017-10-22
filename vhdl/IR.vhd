@@ -16,18 +16,20 @@ architecture synth of IR is
 
 begin
 
-pro_save : process(D, enable)
-begin
-  if (enable = '1') then
-    s_D <= D;
-  end if;
-end process;
+  pro_save : process(D, enable)
+  begin
 
-pro_write : process(clk)
-begin
-  if(rising_edge(clk)) then
-    Q <= s_D;
-  end if;
-end process;
+    if (enable = '1') then s_D <= D;
+    end if;
+
+  end process;
+
+  pro_write : process(clk)
+  begin
+
+    if(rising_edge(clk)) then Q <= s_D;
+    end if;
+
+  end process;
 
 end synth;

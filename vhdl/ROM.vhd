@@ -25,8 +25,7 @@ begin
   pro_tristate: process (clk) is
   begin
 
-
-    if(rising_edge(clk) and (cs and read) = '1') then
+    if (rising_edge(clk) and (cs and read) = '1') then
       rddata <= s_q;
     end if;
 
@@ -35,5 +34,7 @@ begin
       else rddata <= (others => 'Z');
       end if;
     end if;
+    
   end process pro_tristate;
+
 end synth;

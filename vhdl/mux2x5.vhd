@@ -12,7 +12,9 @@ end mux2x5;
 
 architecture synth of mux2x5 is
 begin
+
   with sel select
     o <= i0 when '0',
          i1 when others;
+         
 end synth;

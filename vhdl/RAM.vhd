@@ -26,6 +26,7 @@ begin
 
   pro_read_en : process(clk) is
   begin
+    
     if(rising_edge(clk)) then
       s_cs_and_read <= cs and read;
       s_addr <= address;
@@ -43,6 +44,7 @@ begin
 
   pro_write: process (clk) is
   begin
+
     if (rising_edge(clk)) then
       if(cs = '1' and write = '1') then
       		words(to_integer(unsigned(address))) <= wrdata;

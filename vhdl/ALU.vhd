@@ -32,7 +32,8 @@ END ALU;
 ARCHITECTURE bdf_type OF ALU IS
 
 COMPONENT add_sub
-	PORT(sub_mode : IN STD_LOGIC;
+	PORT(
+		 sub_mode : IN STD_LOGIC;
 		 a : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
 		 b : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
 		 carry : OUT STD_LOGIC;
@@ -80,6 +81,7 @@ COMPONENT shift_unit
 		op : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
 		r : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
 	);
+
 END COMPONENT;
 
 SIGNAL	addsub :  STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -91,47 +93,53 @@ SIGNAL	zero :  STD_LOGIC;
 
 BEGIN
 
-b2v_add_sub_0 : add_sub
-PORT MAP(
-	sub_mode => op(3),
-	a => a,
-	b => b,
-	carry => carry,
-	zero => zero,
-	r => addsub);
+	b2v_add_sub_0 : add_sub
+	PORT MAP(
+			sub_mode => op(3),
+			a => a,
+			b => b,
+			carry => carry,
+			zero => zero,
+			r => addsub
+		);
 
-b2v_comparator_0 : comparator
-PORT MAP(
-	carry => carry,
-	zero => zero,
-	a_31 => a(31),
-	b_31 => b(31),
-	diff_31 => addsub(31),
-	op => op(2 DOWNTO 0),
-	r => comp_r(0));
+	b2v_comparator_0 : comparator
+	PORT MAP(
+			carry => carry,
+			zero => zero,
+			a_31 => a(31),
+			b_31 => b(31),
+			diff_31 => addsub(31),
+			op => op(2 DOWNTO 0),
+			r => comp_r(0)
+		);
 
-b2v_logic_unit_0 : logic_unit
-PORT MAP(
-	a => a,
-	b => b,
-	op => op(1 DOWNTO 0),
-	r => logic_r);
+	b2v_logic_unit_0 : logic_unit
+	PORT MAP(
+			a => a,
+			b => b,
+			op => op(1 DOWNTO 0),
+			r => logic_r
+		);
 
-b2v_multiplexer_0 : multiplexer
-PORT MAP(
-	i0 => addsub,
-	i1 => comp_r,
-	i2 => logic_r,
-	i3 => shift_r,
-	sel => op(5 DOWNTO 4),
-	o => s);
+	b2v_multiplexer_0 : multiplexer
+	PORT MAP(
+			i0 => addsub,
+			i1 => comp_r,
+			i2 => logic_r,
+			i3 => shift_r,
+			sel => op(5 DOWNTO 4),
+			o => s
+		);
 
-b2v_shift_unit_0 : shift_unit
-PORT MAP(
-	a => a,
-	b => b(4 DOWNTO 0),
-	op => op(2 DOWNTO 0),
-	r => shift_r);
+	b2v_shift_unit_0 : shift_unit
+	PORT MAP(
+			a => a,
+			b => b(4 DOWNTO 0),
+			op => op(2 DOWNTO 0),
+			r => shift_r
+		);
 
-comp_r(31 DOWNTO 1) <= "0000000000000000000000000000000";
+	comp_r(31 DOWNTO 1) <= "0000000000000000000000000000000";
+
 END bdf_type;
