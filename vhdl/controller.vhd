@@ -62,6 +62,7 @@ begin
                             elsif opx = "011010" then op_alu <= "110011";
                             elsif opx = "111010" then op_alu <= "110111";
                           end if;
+
       elsif op = "010111" then op_alu <= "000000";
       elsif op = "010101" then op_alu <= "000000";
       elsif op = "001110" then op_alu <= "011001";
@@ -77,15 +78,18 @@ begin
       elsif op = "000110" then op_alu <= "011100";
       else op_alu <= op;
     end if;
+
   end process pro_op;
 
   pro_fsm : process(clk) is
   begin
+
     if(rising_edge(clk)) then
         if (reset_n = '0') then s_cur_state <= FETCH1;
         else s_cur_state <= s_next_state;
         end if;
     end if;
+    
   end process;
 
   pro_state : process(s_cur_state) is

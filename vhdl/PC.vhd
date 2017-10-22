@@ -26,6 +26,7 @@ begin
 
   pro_save : process(clk, reset_n)
   begin
+
     if (reset_n = '1') then
       s_addr <= "0000000000000000";
     else
@@ -37,6 +38,7 @@ begin
         end if;
       end if;
     end if;
+    
   end process;
 
 end synth;

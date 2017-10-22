@@ -26,20 +26,23 @@ begin
 
   pro_read_en : process(clk) is
   begin
-    
+
     if(rising_edge(clk)) then
       s_cs_and_read <= cs and read;
       s_addr <= address;
     end if;
+
   end process;
 
   pro_read: process (s_cs_and_read, s_addr, words) is
   begin
+
   	rddata <= (others => 'Z');
 
     if(s_cs_and_read = '1') then
       rddata <= words(to_integer(unsigned(s_addr)));
     end if;
+
   end process;
 
   pro_write: process (clk) is
@@ -50,5 +53,6 @@ begin
       		words(to_integer(unsigned(address))) <= wrdata;
       end if;
     end if;
+    
   end process;
 end synth;

@@ -20,6 +20,7 @@ entity buttons is
 end buttons;
 
 architecture synth of buttons is
+
     constant REG_DATA : std_logic := '0';
     constant REG_EDGE : std_logic := '1';
 
@@ -34,6 +35,7 @@ begin
     -- address_reg & button_reg
     process(clk, reset_n)
     begin
+
         if (reset_n = '0') then
             address_reg <= '0';
             read_reg    <= '0';
@@ -43,12 +45,14 @@ begin
             read_reg    <= read and cs;
             buttons_reg <= buttons;
         end if;
+
     end process;
 
     -- read
     process(read_reg, address_reg, edges, buttons)
     begin
         rddata <= (others => 'Z');
+
         if (read_reg = '1') then
             rddata <= (others => '0');
             case address_reg is
@@ -59,11 +63,13 @@ begin
                 when others =>
             end case;
         end if;
+
     end process;
 
     -- edges
     process(clk, reset_n)
     begin
+
         if (reset_n = '0') then
             edges <= (others => '0');
         elsif (rising_edge(clk)) then
@@ -76,6 +82,7 @@ begin
                 end if;
             end if;
         end if;
+        
     end process;
 
 end synth;

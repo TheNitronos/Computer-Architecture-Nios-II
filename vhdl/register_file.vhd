@@ -21,15 +21,18 @@ architecture synth of register_file is
     signal reg: reg_type := (others => (others => '0'));
 
 begin
-  
+
   a <= reg(to_integer(unsigned(aa)));
   b <= reg(to_integer(unsigned(ab)));
 
   pro_write: process (clk) is
   begin
+    
     if (rising_edge(clk) and wren = '1') then
         reg(to_integer(unsigned(aw))) <= wrdata;
         reg(0) <= X"00000000";
     end if;
+
   end process pro_write;
+
 end synth;
