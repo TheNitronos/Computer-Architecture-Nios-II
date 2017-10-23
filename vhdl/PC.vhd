@@ -22,12 +22,12 @@ architecture synth of PC is
 
 begin
 
-  addr <= "0000000000000000" & (s_addr and "1111111111111100");
+  addr <= X"0000" & (s_addr and (X"FFF"&"1100"));
 
   pro_save : process(clk, reset_n, en)
   begin
 
-    if (reset_n = '0') then s_addr <= "0000000000000000";
+    if (reset_n = '0') then s_addr <= X"0000";
     elsif (en = '1') then
       if (rising_edge(clk)) then
         if (add_imm = '1') then s_addr <= std_logic_vector(unsigned(s_addr) + unsigned(imm));
