@@ -139,6 +139,6 @@ BEGIN
 			r => shift_r
 		);
 
-	comp_r(31 DOWNTO 1) <= "0000000000000000000000000000000";
+	comp_r(31 DOWNTO 1) <= X"0000000"&"000";
 
 END bdf_type;
