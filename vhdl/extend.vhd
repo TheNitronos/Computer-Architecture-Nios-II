@@ -10,22 +10,6 @@ entity extend is
 end extend;
 
 architecture synth of extend is
-
-  signal s_imm16 : std_logic_vector(15 downto 0);
-
 begin
-
-  s_imm16 <= imm16;
-
-  pro_ext : process(s_imm16, signed)
-  begin
-
-    if (signed = '1' and s_imm16(15) = '1') then
-      imm32 <= X"FFFF" & s_imm16;
-    else
-      imm32 <= X"0000" & s_imm16;
-    end if;
-
-  end process;
-
+  imm32 <= "1111111111111111" & imm16 when (signed = '1' and imm16(15) = '1') else "0000000000000000" & imm16;
 end synth;
