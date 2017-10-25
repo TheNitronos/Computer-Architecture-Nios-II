@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity ROM is
+entity rom is
   port(
     clk     : in  std_logic;
     cs      : in  std_logic;
@@ -9,9 +9,9 @@ entity ROM is
     address : in  std_logic_vector(9 downto 0);
     rddata  : out std_logic_vector(31 downto 0)
   );
-end ROM;
+end rom;
 
-architecture synth of ROM is
+architecture synth of rom is
 
 	signal s_q : std_logic_vector(31 downto 0);
 
@@ -34,7 +34,7 @@ begin
       else rddata <= (others => 'Z');
       end if;
     end if;
-    
+
   end process pro_tristate;
 
 end synth;

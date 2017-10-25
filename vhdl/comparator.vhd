@@ -17,11 +17,11 @@ architecture synth of comparator is
 begin
 
   with op select
-    r <= ((NOT a_31 AND b_31) OR (NOT diff_31 AND (NOT a_31 XOR b_31))) WHEN "001",
-    ((a_31 AND NOT b_31) OR (diff_31 AND (NOT a_31 XOR b_31))) WHEN "010",
-    NOT zero WHEN "011",
-    NOT carry WHEN "110",
-    carry WHEN "101",
-    zero WHEN others;
+    r <= ((not a_31 and b_31) or (not diff_31 and (not a_31 xor b_31))) when "001",
+    ((a_31 and not b_31) or (diff_31 and (not a_31 xor b_31))) when "010",
+    not zero when "011",
+    not carry when "110",
+    carry when "101",
+    zero when others;
 
 end synth;

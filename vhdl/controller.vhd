@@ -38,8 +38,8 @@ end controller;
 
 architecture synth of controller is
 
-  TYPE StateType IS (FETCH1, FETCH2, DECODE, R_OP, STORE, BREAK, LOAD1, LOAD2, I_OP, BRANCH, CALL, JMP, U_I_OP, SHIFT);
-  SIGNAl s_cur_state, s_next_state: StateType;
+  type StateType is (FETCH1, FETCH2, DECODE, R_OP, STORE, BREAK, LOAD1, LOAD2, I_OP, BRANCH, CALL, JMP, U_I_OP, SHIFT);
+  signal s_cur_state, s_next_state: StateType;
 
 begin
 
@@ -89,13 +89,13 @@ begin
         else s_cur_state <= s_next_state;
         end if;
     end if;
-    
+
   end process;
 
   pro_state : process(s_cur_state) is
   begin
     CASE (s_cur_state) IS
-        WHEN FETCH1 => rf_wren <= '0';
+        when FETCH1 => rf_wren <= '0';
                        read <= '0';
                        write <= '0';
                        pc_en <= '0';
@@ -114,11 +114,11 @@ begin
                        write <= '0';
                        read <= '1';
                        s_next_state <= FETCH2;
-        WHEN FETCH2 => read <= '0';
+        when FETCH2 => read <= '0';
                        ir_en <= '1';
                        pc_en <= '1';
                        s_next_state <= DECODE;
-        WHEN DECODE => ir_en <= '0';
+        when DECODE => ir_en <= '0';
                        pc_en <= '0';
                        if (op = "111010" and opx = "110100") then s_next_state <= BREAK;
                        elsif(op = "111010" and opx = "001101") then s_next_state <= JMP;
@@ -137,43 +137,43 @@ begin
                                             or op = "011100") then s_next_state <= U_I_OP;
                        else s_next_state <= I_OP;
                        end if;
-        WHEN I_OP => rf_wren <= '1';
+        when I_OP => rf_wren <= '1';
                      imm_signed <= '1';
                      s_next_state <= FETCH1;
-        WHEN U_I_OP => rf_wren <= '1';
+        when U_I_OP => rf_wren <= '1';
                        imm_signed <= '0';
                        s_next_state <= FETCH1;
-        WHEN R_OP => rf_wren <= '1';
+        when R_OP => rf_wren <= '1';
                      sel_b <= '1';
                      sel_rC <= '1';
                      s_next_state <= FETCH1;
-        WHEN SHIFT => rf_wren <= '1';
+        when SHIFT => rf_wren <= '1';
                       sel_b <= '0';
                       sel_rC <= '1';
                       s_next_state <= FETCH1;
-        WHEN LOAD1 => sel_addr <= '1';
+        when LOAD1 => sel_addr <= '1';
                       sel_b <= '0';
                       read <= '1';
                       imm_signed <= '1';
                       s_next_state <= LOAD2;
-        WHEN LOAD2 => sel_addr <= '0';
+        when LOAD2 => sel_addr <= '0';
                       read <= '0';
                       imm_signed <= '0';
                       rf_wren <= '1';
                       sel_mem <= '1';
                       sel_rC <= '0';
                       s_next_state <= FETCH1;
-        WHEN STORE => sel_addr <= '1';
+        when STORE => sel_addr <= '1';
                       sel_b <= '0';
                       write <= '1';
                       imm_signed <= '1';
                       s_next_state <= FETCH1;
-        WHEN BREAK => s_next_state <= BREAK;
-        WHEN BRANCH => sel_b <= '1';
+        when BREAK => s_next_state <= BREAK;
+        when BRANCH => sel_b <= '1';
                        pc_add_imm <= '1';
                        branch_op <= '1';
                        s_next_state <= FETCH1;
-        WHEN CALL => sel_ra <= '1';
+        when CALL => sel_ra <= '1';
                      rf_wren <= '1';
                      sel_mem <= '0';
                      pc_en <= '1';
@@ -181,7 +181,7 @@ begin
                      sel_pc <= '1';
                      sel_rC <= '0';
                      s_next_state <= FETCH1;
-        WHEN JMP => pc_sel_a <= '1';
+        when JMP => pc_sel_a <= '1';
                     pc_en <= '1';
                     s_next_state <= FETCH1;
       end CASE;
