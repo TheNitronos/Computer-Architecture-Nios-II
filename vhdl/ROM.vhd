@@ -30,9 +30,11 @@ begin
     end if;
 
     if (rising_edge(clk)) then
+
       if ((cs and read) = '1') then rddata <= s_q;
       else rddata <= (others => 'Z');
       end if;
+      
     end if;
 
   end process pro_tristate;

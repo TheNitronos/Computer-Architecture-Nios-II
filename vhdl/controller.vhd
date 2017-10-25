@@ -46,21 +46,21 @@ begin
   pro_op : process(op, opx) is
   begin
     if op = "111010" then if opx = "001110" then op_alu <= "100001";
-                            elsif opx = "011011" then op_alu <= "110011";
-                            elsif opx = "110001" then op_alu <= "000000";
-                            elsif opx = "111001" then op_alu <= "001000";
-                            elsif opx = "001000" then op_alu <= "011001";
-                            elsif opx = "010000" then op_alu <= "011010";
-                            elsif opx = "000110" then op_alu <= "100000";
-                            elsif opx = "001110" then op_alu <= "100001";
-                            elsif opx = "010110" then op_alu <= "100010";
-                            elsif opx = "011110" then op_alu <= "100011";
-                            elsif opx = "010011" then op_alu <= "110010";
-                            elsif opx = "011011" then op_alu <= "110011";
-                            elsif opx = "111011" then op_alu <= "110111";
-                            elsif opx = "010010" then op_alu <= "110010";
-                            elsif opx = "011010" then op_alu <= "110011";
-                            elsif opx = "111010" then op_alu <= "110111";
+                          elsif opx = "011011" then op_alu <= "110011";
+                          elsif opx = "110001" then op_alu <= "000000";
+                          elsif opx = "111001" then op_alu <= "001000";
+                          elsif opx = "001000" then op_alu <= "011001";
+                          elsif opx = "010000" then op_alu <= "011010";
+                          elsif opx = "000110" then op_alu <= "100000";
+                          elsif opx = "001110" then op_alu <= "100001";
+                          elsif opx = "010110" then op_alu <= "100010";
+                          elsif opx = "011110" then op_alu <= "100011";
+                          elsif opx = "010011" then op_alu <= "110010";
+                          elsif opx = "011011" then op_alu <= "110011";
+                          elsif opx = "111011" then op_alu <= "110111";
+                          elsif opx = "010010" then op_alu <= "110010";
+                          elsif opx = "011010" then op_alu <= "110011";
+                          elsif opx = "111010" then op_alu <= "110111";
                           end if;
 
       elsif op = "010111" then op_alu <= "000000";
@@ -85,16 +85,16 @@ begin
   begin
 
     if(rising_edge(clk)) then
-        if (reset_n = '0') then s_cur_state <= FETCH1;
-        else s_cur_state <= s_next_state;
-        end if;
+      if (reset_n = '0') then s_cur_state <= FETCH1;
+      else s_cur_state <= s_next_state;
+      end if;
     end if;
 
   end process;
 
   pro_state : process(s_cur_state) is
   begin
-    CASE (s_cur_state) IS
+    case (s_cur_state) IS
         when FETCH1 => rf_wren <= '0';
                        read <= '0';
                        write <= '0';
@@ -114,10 +114,12 @@ begin
                        write <= '0';
                        read <= '1';
                        s_next_state <= FETCH2;
+
         when FETCH2 => read <= '0';
                        ir_en <= '1';
                        pc_en <= '1';
                        s_next_state <= DECODE;
+
         when DECODE => ir_en <= '0';
                        pc_en <= '0';
                        if (op = "111010" and opx = "110100") then s_next_state <= BREAK;
@@ -137,25 +139,31 @@ begin
                                             or op = "011100") then s_next_state <= U_I_OP;
                        else s_next_state <= I_OP;
                        end if;
+
         when I_OP => rf_wren <= '1';
                      imm_signed <= '1';
                      s_next_state <= FETCH1;
+
         when U_I_OP => rf_wren <= '1';
                        imm_signed <= '0';
                        s_next_state <= FETCH1;
+
         when R_OP => rf_wren <= '1';
                      sel_b <= '1';
                      sel_rC <= '1';
                      s_next_state <= FETCH1;
+
         when SHIFT => rf_wren <= '1';
                       sel_b <= '0';
                       sel_rC <= '1';
                       s_next_state <= FETCH1;
+
         when LOAD1 => sel_addr <= '1';
                       sel_b <= '0';
                       read <= '1';
                       imm_signed <= '1';
                       s_next_state <= LOAD2;
+
         when LOAD2 => sel_addr <= '0';
                       read <= '0';
                       imm_signed <= '0';
@@ -163,16 +171,20 @@ begin
                       sel_mem <= '1';
                       sel_rC <= '0';
                       s_next_state <= FETCH1;
+
         when STORE => sel_addr <= '1';
                       sel_b <= '0';
                       write <= '1';
                       imm_signed <= '1';
                       s_next_state <= FETCH1;
+
         when BREAK => s_next_state <= BREAK;
+
         when BRANCH => sel_b <= '1';
                        pc_add_imm <= '1';
                        branch_op <= '1';
                        s_next_state <= FETCH1;
+
         when CALL => sel_ra <= '1';
                      rf_wren <= '1';
                      sel_mem <= '0';
@@ -181,9 +193,11 @@ begin
                      sel_pc <= '1';
                      sel_rC <= '0';
                      s_next_state <= FETCH1;
+
         when JMP => pc_sel_a <= '1';
                     pc_en <= '1';
                     s_next_state <= FETCH1;
-      end CASE;
+
+      end case;
     end process;
 end synth;

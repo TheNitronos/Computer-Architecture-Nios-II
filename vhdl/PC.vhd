@@ -28,13 +28,16 @@ begin
   begin
 
     if (reset_n = '0') then s_addr <= X"0000";
+
     elsif (en = '1') then
       if (rising_edge(clk)) then
+
         if (add_imm = '1') then s_addr <= std_logic_vector(unsigned(s_addr) + unsigned(imm));
         elsif (sel_imm = '1') then s_addr <= std_logic_vector(shift_left(unsigned(imm), 2));
         elsif (sel_a = '1') then s_addr <= a;
         else s_addr <= std_logic_vector(unsigned(s_addr) + 4);
         end if;
+
       end if;
     end if;
 

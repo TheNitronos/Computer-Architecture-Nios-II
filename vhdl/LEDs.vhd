@@ -20,7 +20,7 @@ entity LEDs is
 end LEDs;
 
 architecture synth of LEDs is
-  
+
     constant REG_LED_0_31   : std_logic_vector(1 downto 0) := "00";
     constant REG_LED_32_63  : std_logic_vector(1 downto 0) := "01";
     constant REG_LED_64_95  : std_logic_vector(1 downto 0) := "10";
